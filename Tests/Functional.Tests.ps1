@@ -63,11 +63,18 @@ Describe 'DbQuery RIGHT/FULL join emulation' {
         $q = $q.Join('b', 'a.id = b.a_id', 'Right').Select(@('a.id as aid','b.id as bid'))
         $right = $q.Run()
         ($right | Measure-Object).Count | Should -Be 2
+        # Assert expected pairs
+        ($right | Where-Object { $_.aid -eq 1 -and $_.bid -eq 10 } | Measure-Object).Count | Should -Be 1
+        ($right | Where-Object { ( $null -eq $_.aid -or $_.aid -is [System.DBNull] ) -and $_.bid -eq 11 } | Measure-Object).Count | Should -Be 1
 
         # FULL join: union of both sides
         $q2 = New-DbQuery -Database $db -From 'a'
         $q2 = $q2.Join('b', 'a.id = b.a_id', 'Full').Select(@('a.id as aid','b.id as bid'))
         $full = $q2.Run()
         ($full | Measure-Object).Count | Should -BeGreaterThan 2
+        # Assert expected pairs present (1,10), (2,$null), ($null,11)
+        ($full | Where-Object { $_.aid -eq 1 -and $_.bid -eq 10 } | Measure-Object).Count | Should -Be 1
+        ($full | Where-Object { $_.aid -eq 2 -and ( $null -eq $_.bid -or $_.bid -is [System.DBNull] ) } | Measure-Object).Count | Should -Be 1
+        ($full | Where-Object { ( $null -eq $_.aid -or $_.aid -is [System.DBNull] ) -and $_.bid -eq 11 } | Measure-Object).Count | Should -Be 1
     }
 }
