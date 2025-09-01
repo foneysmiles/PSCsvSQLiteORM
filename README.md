@@ -32,6 +32,9 @@ Apply it:
 
 Explicit parameters override settings in the file.
 
+- Example settings file to copy: `source/Examples/orm.settings.ps1`
+  - Usage: `Initialize-ORMVars -SettingsPath (Join-Path $PSScriptRoot 'source/Examples/orm.settings.ps1')`
+
 ## AppendOnly schema mode
 
 - `Import-CsvToSqlite -SchemaMode AppendOnly` prohibits schema changes and skips table creation.
@@ -45,3 +48,10 @@ The query builder supports INNER and LEFT joins natively. RIGHT and FULL joins a
 
 Limitations: currently supports at most one RIGHT/FULL join per query.
 
+Example:
+
+```
+$q = New-DbQuery -Database $db -From 'a'
+$q = $q.Join('b', 'a.id = b.a_id', 'Right').Select(@('a.id as aid','b.id as bid'))
+$rows = $q.Run()
+```
