@@ -14,7 +14,7 @@ if (-not (Test-Path $OutputPath)) {
 
 # Build the module
 Import-Module ModuleBuilder
-Build-Module -SourcePath .\source -OutputDirectory 'C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\output' -Verbose
+Build-Module -SourcePath .\source -OutputDirectory 'C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\output' -Verbose -Version 3.01
 
 # Import the built module for testing
 $BuiltModulePath = Join-Path $OutputPath $ModuleName

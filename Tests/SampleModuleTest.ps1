@@ -1,10 +1,12 @@
 # Sample test script for PSCsvSQLiteORM module
 # Imports sample CSVs, creates tables, and runs basic queries
 
-# Import the built module (points to the output folder root and resolves latest version)
 Import-Module (Join-Path $PSScriptRoot '..' 'output' 'PSCsvSQLiteORM') -Force
+Initialize-ORMVars -LogLevel INFO
 
-$database = Join-Path $PSScriptRoot 'sample.db'
+$tmpDir = Join-Path $PSScriptRoot 'tmp'
+if (-not (Test-Path -LiteralPath $tmpDir)) { New-Item -ItemType Directory -Path $tmpDir | Out-Null }
+$database = Join-Path $tmpDir ("sample_{0}.db" -f ([guid]::NewGuid().ToString('N')))
 
 # Import assets
 Import-CsvToSqlite -Database $database -TableName 'assets' -CsvPath (Join-Path $PSScriptRoot 'assets.csv')

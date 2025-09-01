@@ -15,7 +15,7 @@
 RootModule = 'PSCsvSQLiteORM.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0.1'
+ModuleVersion = '3.1'
 
 # Supported PSEditions
 CompatiblePSEditions = @('5.1')
