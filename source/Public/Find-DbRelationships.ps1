@@ -1,4 +1,4 @@
-function Suggest-DbRelationships {
+function Find-DbRelationships {
     param([Parameter(Mandatory)][string]$Database)
 
     function Get-RefColumn {
@@ -45,6 +45,8 @@ function Suggest-DbRelationships {
 
     Initialize-Db -Database $Database
 
+    $suggestions = New-Object System.Collections.ArrayList
+
     $tables = Invoke-DbQuery -Database $Database -Query "SELECT table_name FROM __tables__"
     $tableNames = $tables | ForEach-Object { $_.table_name }
 
@@ -70,8 +72,19 @@ DO UPDATE SET
   confidence=excluded.confidence,
   status=COALESCE(__fks__.status,'suggested')
 "@ -SqlParameters @{ t = $tn; c = $c; rt = $ref; rc = $pick.name; conf = [math]::Round($pick.score, 2) } -NonQuery | Out-Null
+
+                    [void]$suggestions.Add([pscustomobject]@{
+                        table_name  = $tn
+                        column_name = $c
+                        ref_table   = $ref
+                        ref_column  = $pick.name
+                        confidence  = [math]::Round($pick.score, 2)
+                        status      = 'suggested'
+                    })
                 }
             }
         }
     }
+    return $suggestions
 }
+

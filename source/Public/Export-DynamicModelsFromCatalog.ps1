@@ -1,4 +1,4 @@
-function Emit-DynamicModelsFromCatalog {
+function Export-DynamicModelsFromCatalog {
     param([Parameter(Mandatory)][string]$Database)
 
     Initialize-Db -Database $Database
@@ -9,7 +9,7 @@ function Emit-DynamicModelsFromCatalog {
         $tn = $t.table_name
         if ($tn -like 'sqlite_%' -or $tn -in @('__tables__', '__columns__', '__fks__', 'schema_migrations')) { continue }
 
-        $cols = Invoke-DbQuery -Database $Database -Query "PRAGMA table_info($(Quote-Ident $tn))" | Sort-Object -Property cid
+        $cols = Invoke-DbQuery -Database $Database -Query "PRAGMA table_info($(ConvertTo-Ident $tn))" | Sort-Object -Property cid
         $colNames = $cols | ForEach-Object { $_.name }
         if (-not $colNames -or $colNames.Count -eq 0) { continue }
 
@@ -29,3 +29,4 @@ function Emit-DynamicModelsFromCatalog {
 
     return $script:ModelTypes
 }
+

@@ -42,17 +42,42 @@ LIMIT 1
     }
 
     [object[]]Run() {
-        $sql = "SELECT "
-        if ($this.Selects.Count -gt 0) { $sql += ($this.Selects -join ', ') } else { $sql += "*" }
-        $sql += " FROM $($this.From)"
-        foreach ($j in $this.Joins) {
-            $jt = switch ($j.Type) { 'Left' { 'LEFT JOIN' } 'Right' { 'RIGHT JOIN' } 'Full' { 'FULL OUTER JOIN' } default { 'INNER JOIN' } }
-            $sql += " $jt $($j.Table) ON $($j.On)"
+        $selectClause = if ($this.Selects.Count -gt 0) { ($this.Selects -join ', ') } else { '*' }
+        $hasRightOrFull = $false
+        foreach ($j in $this.Joins) { if ($j.Type -in @('Right','Full')) { $hasRightOrFull = $true } }
+
+        if (-not $hasRightOrFull) {
+            $sql = "SELECT $selectClause FROM $($this.From)"
+            foreach ($j in $this.Joins) {
+                $jt = switch ($j.Type) { 'Left' { 'LEFT JOIN' } default { 'INNER JOIN' } }
+                $sql += " $jt $($j.Table) ON $($j.On)"
+            }
+            if ($this.Wheres.Count -gt 0) { $sql += " WHERE " + ($this.Wheres -join " AND ") }
+            if ($this.OrderBy) { $sql += " ORDER BY $($this.OrderBy)" }
+            if ($this.Limit -gt -1) { $sql += " LIMIT $($this.Limit)" }
+            if ($this.Offset -gt -1) { $sql += " OFFSET $($this.Offset)" }
+            return Invoke-DbQuery -Database $this.Database -Query $sql -SqlParameters $this.Params
         }
-        if ($this.Wheres.Count -gt 0) { $sql += " WHERE " + ($this.Wheres -join " AND ") }
-        if ($this.OrderBy) { $sql += " ORDER BY $($this.OrderBy)" }
-        if ($this.Limit -gt -1) { $sql += " LIMIT $($this.Limit)" }
-        if ($this.Offset -gt -1) { $sql += " OFFSET $($this.Offset)" }
-        return Invoke-DbQuery -Database $this.Database -Query $sql -SqlParameters $this.Params
+        else {
+            if ($this.Joins.Count -ne 1) { throw "RIGHT/FULL join emulation currently supports a single join only." }
+            $j = $this.Joins[0]
+            if ($j.Type -eq 'Right') {
+                # Emulate RIGHT JOIN by swapping tables into a LEFT JOIN
+                $sql = "SELECT $selectClause FROM $($j.Table) LEFT JOIN $($this.From) ON $($j.On)"
+            }
+            elseif ($j.Type -eq 'Full') {
+                # Emulate FULL OUTER JOIN via UNION of two LEFT JOINs
+                $left = "SELECT $selectClause FROM $($this.From) LEFT JOIN $($j.Table) ON $($j.On)"
+                $right = "SELECT $selectClause FROM $($j.Table) LEFT JOIN $($this.From) ON $($j.On)"
+                $sql = "$left UNION $right"
+            }
+            else { throw "Unexpected join type for emulation: $($j.Type)" }
+
+            if ($this.Wheres.Count -gt 0) { $sql = "$sql WHERE " + ($this.Wheres -join " AND ") }
+            if ($this.OrderBy) { $sql += " ORDER BY $($this.OrderBy)" }
+            if ($this.Limit -gt -1) { $sql += " LIMIT $($this.Limit)" }
+            if ($this.Offset -gt -1) { $sql += " OFFSET $($this.Offset)" }
+            return Invoke-DbQuery -Database $this.Database -Query $sql -SqlParameters $this.Params
+        }
     }
 }

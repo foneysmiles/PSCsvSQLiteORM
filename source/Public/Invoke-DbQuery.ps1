@@ -31,12 +31,12 @@ function Invoke-DbQuery {
                 if ($AsDataTable) { return $dt } else { return $dt | Select-Object * }
             }
         }
-        catch { Write-DbLog ERROR "Invoke-DbQuery error" $_.Exception; throw }
+    catch { Write-DbLog ERROR "Invoke-DbQuery error" $_.Exception; throw }
         finally { $cmd.Dispose() }
     }
     else {
         # Fallback path via PSSQLite
-        Ensure-ForeignKeysPragma -Database $Database
+        Enable-ForeignKeysPragma -Database $Database
         try {
             if ($Scalar) {
                 $q = Invoke-SqliteQuery -DataSource $Database -Query $Query -SqlParameters $SqlParameters

@@ -13,10 +13,10 @@ function Confirm-DbForeignKey {
     $checkTrig = "trg_fk_${From}_${Column}_check"
     $delTrig = "trg_fk_${From}_${Column}_ondelete"
 
-    $quotedFrom = Quote-Ident $From; $quotedCol = Quote-Ident $Column; $quotedTo = Quote-Ident $To; $quotedRef = Quote-Ident $RefColumn
+    $quotedFrom = ConvertTo-Ident $From; $quotedCol = ConvertTo-Ident $Column; $quotedTo = ConvertTo-Ident $To; $quotedRef = ConvertTo-Ident $RefColumn
 
     $checkSql = @"
-CREATE TRIGGER IF NOT EXISTS $(Quote-Ident $checkTrig)
+CREATE TRIGGER IF NOT EXISTS $(ConvertTo-Ident $checkTrig)
 BEFORE INSERT ON $quotedFrom
 FOR EACH ROW BEGIN
     SELECT RAISE(ABORT, 'FK violation: $From.$Column → $To.$RefColumn')
@@ -26,7 +26,7 @@ END;
     Invoke-DbQuery -Database $Database -Query $checkSql -NonQuery | Out-Null
 
     $updSql = @"
-CREATE TRIGGER IF NOT EXISTS $(Quote-Ident ($checkTrig + '_upd'))
+CREATE TRIGGER IF NOT EXISTS $(ConvertTo-Ident ($checkTrig + '_upd'))
 BEFORE UPDATE OF $quotedCol ON $quotedFrom
 FOR EACH ROW BEGIN
     SELECT RAISE(ABORT, 'FK violation: $From.$Column → $To.$RefColumn')
@@ -37,7 +37,7 @@ END;
 
     if ($OnDelete -eq 'CASCADE') {
         $cascadeSql = @"
-CREATE TRIGGER IF NOT EXISTS $(Quote-Ident $delTrig)
+CREATE TRIGGER IF NOT EXISTS $(ConvertTo-Ident $delTrig)
 AFTER DELETE ON $quotedTo
 FOR EACH ROW BEGIN
     DELETE FROM $quotedFrom WHERE $quotedFrom.$quotedCol = OLD.$quotedRef;

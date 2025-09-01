@@ -72,34 +72,7 @@ RequiredModules = @('PSSQLite')
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @(
-    'Add-DbMigration',
-    'Close-DbConnections',
-    'Commit-DbTransaction',
-    'Confirm-DbForeignKey',
-    'Export-DynamicModelsFromCatalog',
-    'Enable-ForeignKeysPragma',
-    'Enable-UniqueIndex',
-    'Enable-UpsertSupported',
-    'Get-AppliedMigrations',
-    'Get-DbConnection',
-    'Get-TableColumns',
-    'Import-CsvToSqlite',
-    'Test-ColumnTypes',
-    'Initialize-Db',
-    'Initialize-ORMVars',
-    'Invoke-DbQuery',
-    'New-DbQuery',
-    'New-DynamicModel',
-    'ConvertTo-Ident',
-    'Undo-DbTransaction',
-    'Set-DbLogging',
-    'Set-DynamicORMClass',
-    'Start-DbTransaction',
-    'Find-DbRelationships',
-    'Update-DbCatalog',
-    'Write-DbLog'
-)
+FunctionsToExport = @('Add-DbMigration','Close-DbConnections','Commit-DbTransaction','Confirm-DbForeignKey','ConvertTo-Ident','Enable-ForeignKeysPragma','Enable-UniqueIndex','Enable-UpsertSupported','Export-DynamicModelsFromCatalog','Find-DbRelationships','Get-AppliedMigrations','Get-DbConnection','Get-TableColumns','Import-CsvToSqlite','Initialize-Db','Initialize-ORMVars','Invoke-DbQuery','New-DbQuery','New-DynamicModel','Set-DbLogging','Set-DynamicORMClass','Start-DbTransaction','Test-ColumnTypes','Undo-DbTransaction','Update-DbCatalog','Write-DbLog')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = '*'
@@ -159,4 +132,3 @@ PrivateData = @{
 # DefaultCommandPrefix = ''
 
 }
-

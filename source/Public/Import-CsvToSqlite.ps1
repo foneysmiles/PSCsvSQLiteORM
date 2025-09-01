@@ -28,28 +28,38 @@ function Import-CsvToSqlite {
     $headers = $csv[0].PSObject.Properties.Name
     if (-not $headers -or $headers.Count -eq 0) { throw "No columns in CSV." }
 
-    $columnTypes = Infer-ColumnTypes -Csv $csv -Headers $headers
+    $columnTypes = Test-ColumnTypes -Csv $csv -Headers $headers
     foreach ($h in $headers) { if (-not $columnTypes[$h]) { $columnTypes[$h] = 'TEXT' } }
 
-    $quotedCols = ($headers | ForEach-Object { "$(Quote-Ident $_) $($columnTypes[$_])" }) -join ", "
-    if (-not [string]::IsNullOrWhiteSpace($quotedCols)) {
-        $createQuery = "CREATE TABLE IF NOT EXISTS $(Quote-Ident $TableName) ($quotedCols)"
-        Invoke-DbQuery -Database $Database -Query $createQuery -NonQuery | Out-Null
+    $quotedCols = ($headers | ForEach-Object { "$(ConvertTo-Ident $_) $($columnTypes[$_])" }) -join ", "
+    # Handle schema creation based on SchemaMode
+    if ($SchemaMode -ne 'AppendOnly') {
+        if (-not [string]::IsNullOrWhiteSpace($quotedCols)) {
+            $createQuery = "CREATE TABLE IF NOT EXISTS $(ConvertTo-Ident $TableName) ($quotedCols)"
+            Invoke-DbQuery -Database $Database -Query $createQuery -NonQuery | Out-Null
+        }
+    } else {
+        # AppendOnly: ensure table exists; do not create
+        $exists = Invoke-DbQuery -Database $Database -Query "SELECT name FROM sqlite_master WHERE type='table' AND name=@t" -SqlParameters @{ t = $TableName }
+        if (-not $exists -or $exists.Count -eq 0) { throw "AppendOnly mode: table '$TableName' does not exist." }
     }
 
     # Evolve schema
-    $existing = Invoke-DbQuery -Database $Database -Query "PRAGMA table_info($(Quote-Ident $TableName))"
+    $existing = Invoke-DbQuery -Database $Database -Query "PRAGMA table_info($(ConvertTo-Ident $TableName))"
     $existingNames = $existing | ForEach-Object { $_.name }
     if ($SchemaMode -in @('Relaxed')) {
         foreach ($h in $headers) {
             if ($existingNames -notcontains $h) {
-                $sql = "ALTER TABLE $(Quote-Ident $TableName) ADD COLUMN $(Quote-Ident $h) $($columnTypes[$h])"
+                $sql = "ALTER TABLE $(ConvertTo-Ident $TableName) ADD COLUMN $(ConvertTo-Ident $h) $($columnTypes[$h])"
                 Invoke-DbQuery -Database $Database -Query $sql -NonQuery | Out-Null
             }
         }
     }
     elseif ($SchemaMode -eq 'Strict') {
         foreach ($h in $headers) { if ($existingNames -notcontains $h) { throw "Strict mode: missing column $h in $TableName" } }
+    }
+    elseif ($SchemaMode -eq 'AppendOnly') {
+        # No schema changes allowed
     }
 
     # Insert data
@@ -58,9 +68,9 @@ function Import-CsvToSqlite {
         $count = 0
         foreach ($row in $csv) {
             $keys = $row.PSObject.Properties.Name
-            $columns = (($keys | ForEach-Object { Quote-Ident $_ })) -join ", "
+            $columns = (($keys | ForEach-Object { ConvertTo-Ident $_ })) -join ", "
             $placeholders = (($keys | ForEach-Object { "@$_" })) -join ", "
-            $query = "INSERT INTO $(Quote-Ident $TableName) ($columns) VALUES ($placeholders)"
+            $query = "INSERT INTO $(ConvertTo-Ident $TableName) ($columns) VALUES ($placeholders)"
             $params = @{}
             foreach ($k in $keys) { $params[$k] = $row.$k }
             [void](Invoke-DbQuery -Database $Database -Query $query -SqlParameters $params -NonQuery -Transaction $tx)
@@ -72,7 +82,7 @@ function Import-CsvToSqlite {
         }
         Commit-DbTransaction -Database $Database -Transaction $tx
     }
-    catch { Rollback-DbTransaction -Database $Database -Transaction $tx; throw }
+    catch { Undo-DbTransaction -Database $Database -Transaction $tx; throw }
 
     Update-DbCatalog -Database $Database -SourceCsvPath $CsvPath -Table $TableName
     return $headers

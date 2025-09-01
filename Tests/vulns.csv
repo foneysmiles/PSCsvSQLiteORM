@@ -1,0 +1,5 @@
+id,asset_id,title,severity
+1,1,SQL Injection,Critical
+2,2,Cross-Site Scripting,High
+3,1,Open Redirect,Medium
+4,3,Weak Password,Low

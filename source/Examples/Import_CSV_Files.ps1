@@ -8,20 +8,12 @@
 # Migration system
 # Database catalog and metadata tracking
 
-$script:DbPool = @{}     # optional shared connections
-$script:DbLogPath = $null
-$script:DbLogLevel = 'INFO'  # DEBUG|INFO|WARN|ERROR
-$script:PragmaSet = @{}  # track PRAGMA foreign_keys for fallback
-$script:ModelTypes = @{} # table_name -> type name
-$script:ModelTypeObjects = @{} # table_name -> [type]
-$global:DynamicClassScripts = [System.Collections.ArrayList]::new() # track dynamically generated classes
-
 
 # Import Module
-Import-Module PSCsvSqliteORM -Force 
+Import-Module PSCsvSQLiteORM -Force 
 
-# Set logging level (DEBUG, INFO, WARN, ERROR)
-Set-DbLogging -Level DEBUG -Path 'C:\Users\Jaga\Documents\Scripts\ORM\database_2.log'
+# Configure ORM variables (equivalent of a settings script)
+Initialize-ORMVars -LogLevel DEBUG -LogPath 'C:\Users\Jaga\Documents\Scripts\ORM\database_2.log'
 
 # Define your database path
 $db = 'C:\Users\Jaga\Documents\Scripts\ORM\test_4.db'
@@ -56,7 +48,7 @@ $assetColumns = Import-CsvToSqlite `
 Update-DbCatalog -Database $db -SourceCsvPath $csvAssets -Table 'assets'
 
 # Auto-suggest relationships based on column names
-Suggest-DbRelationships -Database $db
+Find-DbRelationships -Database $db
 
 # Confirm specific foreign key relationships
 Confirm-DbForeignKey `
@@ -71,15 +63,8 @@ Confirm-DbForeignKey `
 ## Dynamic Model Generation
 
 ### 4. Generate and Load Dynamic Models
-# Generate dynamic classes for all tables
-$modelTypes = Emit-DynamicModelsFromCatalog -Database $db
-
-# Load the generated classes into current session
-foreach ($script in $script:DynamicClassScripts) {
-    $classDefinition = Get-Content $script.ModelPath -Raw
-    Invoke-Expression $classDefinition
-}
-
+# Generate dynamic classes for all tables and load them
+$modelTypes = Export-DynamicModelsFromCatalog -Database $db
 Set-DynamicORMClass
 
 # Now you can use your dynamic models
@@ -208,7 +193,7 @@ try {
     }
     Commit-DbTransaction -Database $db -Transaction $tx
 } catch {
-    Rollback-DbTransaction -Database $db -Transaction $tx
+    Undo-DbTransaction -Database $db -Transaction $tx
     throw
 }
 
@@ -309,7 +294,7 @@ $page3Assets = $pagedQuery.Run()
 ## Working with Relationships
 
 ### 11. Using Has Many and Belongs To
-# Set up relationships in models (done automatically by Emit-DynamicModelsFromCatalog)
+# Set up relationships in models (done automatically by Export-DynamicModelsFromCatalog)
 # But you can also define them manually:
 
 # Define relationships manually if needed
@@ -397,11 +382,11 @@ Import-CsvToSqlite -CsvPath $csvVulns -Database $db -TableName 'vulns'
 
 # 3. Set up relationships
 Update-DbCatalog -Database $db
-Suggest-DbRelationships -Database $db
+Find-DbRelationships -Database $db
 Confirm-DbForeignKey -Database $db -From 'vulns' -Column 'hostname' -To 'assets'
 
 # 4. Generate models
-Emit-DynamicModelsFromCatalog -Database $db
+Export-DynamicModelsFromCatalog -Database $db
 foreach ($script in $global:DynamicClassScripts) {
     Invoke-Expression (Get-Content $script.ModelPath -Raw)
 }

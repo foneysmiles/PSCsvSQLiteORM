@@ -1,4 +1,4 @@
-function Ensure-ForeignKeysPragma {
+function Enable-ForeignKeysPragma {
     param([Parameter(Mandatory)][string]$Database)
     if ($script:PragmaSet[$Database]) { return }
     try {
@@ -8,3 +8,4 @@ function Ensure-ForeignKeysPragma {
     }
     catch { Write-DbLog WARN "Unable to set PRAGMA foreign_keys in fallback" $_.Exception }
 }
+

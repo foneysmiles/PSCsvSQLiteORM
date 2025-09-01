@@ -1,4 +1,4 @@
-function Infer-ColumnTypes {
+function Test-ColumnTypes {
     param ([Parameter(Mandatory)][array]$Csv, [Parameter(Mandatory)][string[]]$Headers)
     $columnTypes = @{}
     foreach ($header in $Headers) {
@@ -16,3 +16,4 @@ function Infer-ColumnTypes {
     }
     return $columnTypes
 }
+

@@ -1,4 +1,4 @@
-function Ensure-UpsertSupported {
+function Enable-UpsertSupported {
     param([Parameter(Mandatory)][string]$Database)
     $v = Invoke-DbQuery -Database $Database -Query "SELECT sqlite_version() AS v;"
     $ver = $v[0].v
@@ -9,3 +9,4 @@ function Ensure-UpsertSupported {
         throw "SQLite $ver does not support INSERT ... ON CONFLICT DO UPDATE (requires 3.24+)."
     }
 }
+

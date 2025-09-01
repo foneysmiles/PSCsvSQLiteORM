@@ -1,6 +1,6 @@
 function Initialize-Db {
     param([Parameter(Mandatory)][string]$Database)
-    @"
+    $sql = @"
 CREATE TABLE IF NOT EXISTS schema_migrations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     version TEXT NOT NULL UNIQUE,
@@ -34,5 +34,8 @@ CREATE TABLE IF NOT EXISTS __fks__ (
     on_update TEXT,
     PRIMARY KEY (table_name, column_name)
 );
-"@ | ForEach-Object { Invoke-DbQuery -Database $Database -Query $_ -NonQuery | Out-Null }
+"@
+    # Execute full statements, splitting by semicolon terminators
+    $stmts = $sql -split ";\s*`r?`n" | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+    foreach ($stmt in $stmts) { Invoke-DbQuery -Database $Database -Query $stmt -NonQuery | Out-Null }
 }
