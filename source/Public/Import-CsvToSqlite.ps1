@@ -80,7 +80,7 @@ function Import-CsvToSqlite {
                 Write-Progress -Activity "Importing $TableName" -Status "$count / $($csv.Count)" -PercentComplete $pct
             }
         }
-        Commit-DbTransaction -Database $Database -Transaction $tx
+        Complete-DbTransaction -Database $Database -Transaction $tx
     }
     catch { Undo-DbTransaction -Database $Database -Transaction $tx; throw }
 

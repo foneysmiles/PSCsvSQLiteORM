@@ -75,7 +75,7 @@ RequiredModules = @('PSSQLite')
 FunctionsToExport = @(
     'Add-DbMigration',
     'Close-DbConnections',
-    'Commit-DbTransaction',
+    'Complete-DbTransaction',
     'Confirm-DbForeignKey',
     'Export-DynamicModelsFromCatalog',
     'Enable-ForeignKeysPragma',

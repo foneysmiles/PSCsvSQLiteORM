@@ -263,7 +263,7 @@ class DynamicActiveRecord {
             $sql = "INSERT INTO $(ConvertTo-Ident $($this.TableName)) (" + $($this.columns) + ") VALUES ($placeholders)"
                 [void](Invoke-DbQuery -Database $this.Database -Query $sql -SqlParameters $row -NonQuery -Transaction $tx)
             }
-            Commit-DbTransaction -Database $this.Database -Transaction $tx
+            Complete-DbTransaction -Database $this.Database -Transaction $tx
         }
         catch { Undo-DbTransaction -Database $this.Database -Transaction $tx; Write-DbLog ERROR "Bulk insert failed" $_.Exception; throw }
     }
@@ -287,7 +287,7 @@ class DynamicActiveRecord {
         $tx = Start-DbTransaction -Database $this.Database
         try {
             foreach ($row in $Rows) { $this.InsertOnConflict($row, $KeyColumns, $null) }
-            Commit-DbTransaction -Database $this.Database -Transaction $tx
+            Complete-DbTransaction -Database $this.Database -Transaction $tx
         }
         catch { Rollback-DbTransaction -Database $this.Database -Transaction $tx; throw }
     }
@@ -356,7 +356,7 @@ function Add-DbMigration {
     try {
         & $Up $Database
         Invoke-DbQuery -Database $Database -Query "INSERT INTO schema_migrations(version, applied_at) VALUES(@v, @t)" -SqlParameters @{ v = $Version; t = (Get-Date).ToString('s') } -NonQuery | Out-Null
-        Commit-DbTransaction -Database $Database -Transaction $tx; Write-DbLog INFO "Applied migration $Version"
+        Complete-DbTransaction -Database $Database -Transaction $tx; Write-DbLog INFO "Applied migration $Version"
     }
     catch { Undo-DbTransaction -Database $Database -Transaction $tx; Write-DbLog ERROR "Migration $Version failed" $_.Exception; throw }
 }
@@ -370,14 +370,15 @@ function Close-DbConnections {
     $script:DbPool.Clear()
 }
 #EndRegion '.\Public\Close-DbConnections.ps1' 7
-#Region '.\Public\Commit-DbTransaction.ps1' -1
+#Region '.\Public\Complete-DbTransaction.ps1' -1
 
-function Commit-DbTransaction {
+function Complete-DbTransaction {
     param([Parameter(Mandatory)][string]$Database, [System.Data.SQLite.SQLiteTransaction]$Transaction)
     if ($Transaction) { $Transaction.Commit(); $Transaction.Dispose(); return }
     # Fallback path without transaction object: no-op
 }
-#EndRegion '.\Public\Commit-DbTransaction.ps1' 6
+
+#EndRegion '.\Public\Complete-DbTransaction.ps1' 7
 #Region '.\Public\Confirm-DbForeignKey.ps1' -1
 
 function Confirm-DbForeignKey {
@@ -728,7 +729,7 @@ function Import-CsvToSqlite {
                 Write-Progress -Activity "Importing $TableName" -Status "$count / $($csv.Count)" -PercentComplete $pct
             }
         }
-        Commit-DbTransaction -Database $Database -Transaction $tx
+        Complete-DbTransaction -Database $Database -Transaction $tx
     }
     catch { Undo-DbTransaction -Database $Database -Transaction $tx; throw }
 

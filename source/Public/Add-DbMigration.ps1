@@ -7,7 +7,7 @@ function Add-DbMigration {
     try {
         & $Up $Database
         Invoke-DbQuery -Database $Database -Query "INSERT INTO schema_migrations(version, applied_at) VALUES(@v, @t)" -SqlParameters @{ v = $Version; t = (Get-Date).ToString('s') } -NonQuery | Out-Null
-        Commit-DbTransaction -Database $Database -Transaction $tx; Write-DbLog INFO "Applied migration $Version"
+        Complete-DbTransaction -Database $Database -Transaction $tx; Write-DbLog INFO "Applied migration $Version"
     }
     catch { Undo-DbTransaction -Database $Database -Transaction $tx; Write-DbLog ERROR "Migration $Version failed" $_.Exception; throw }
 }

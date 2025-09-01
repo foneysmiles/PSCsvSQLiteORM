@@ -171,7 +171,7 @@ class DynamicActiveRecord {
             $sql = "INSERT INTO $(ConvertTo-Ident $($this.TableName)) (" + $($this.columns) + ") VALUES ($placeholders)"
                 [void](Invoke-DbQuery -Database $this.Database -Query $sql -SqlParameters $row -NonQuery -Transaction $tx)
             }
-            Commit-DbTransaction -Database $this.Database -Transaction $tx
+            Complete-DbTransaction -Database $this.Database -Transaction $tx
         }
         catch { Undo-DbTransaction -Database $this.Database -Transaction $tx; Write-DbLog ERROR "Bulk insert failed" $_.Exception; throw }
     }
@@ -195,7 +195,7 @@ class DynamicActiveRecord {
         $tx = Start-DbTransaction -Database $this.Database
         try {
             foreach ($row in $Rows) { $this.InsertOnConflict($row, $KeyColumns, $null) }
-            Commit-DbTransaction -Database $this.Database -Transaction $tx
+            Complete-DbTransaction -Database $this.Database -Transaction $tx
         }
         catch { Rollback-DbTransaction -Database $this.Database -Transaction $tx; throw }
     }

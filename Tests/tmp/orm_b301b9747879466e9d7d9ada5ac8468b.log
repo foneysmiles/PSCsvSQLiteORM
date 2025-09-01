@@ -1,0 +1,403 @@
+[2025-08-31 22:48:04.332][INFO] ORM initialized. Level=DEBUG, LogPath=C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\Tests\tmp\orm_b301b9747879466e9d7d9ada5ac8468b.log, DefaultDb=(none)
+[2025-08-31 22:48:04.343][INFO] hello from test
+[2025-08-31 22:48:04.597][DEBUG] SQL: CREATE TABLE IF NOT EXISTS "assets" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "hostname" TEXT, "ip" TEXT) | Params: 
+[2025-08-31 22:48:04.712][DEBUG] SQL: PRAGMA table_info("assets") | Params: 
+[2025-08-31 22:48:04.770][DEBUG] SQL: INSERT INTO "assets" ("id", "hostname", "ip") VALUES (@id, @hostname, @ip) | Params: id=1, hostname=server01, ip=192.168.1.10
+[2025-08-31 22:48:04.792][DEBUG] SQL: INSERT INTO "assets" ("id", "hostname", "ip") VALUES (@id, @hostname, @ip) | Params: id=2, hostname=server02, ip=192.168.1.11
+[2025-08-31 22:48:04.807][DEBUG] SQL: INSERT INTO "assets" ("id", "hostname", "ip") VALUES (@id, @hostname, @ip) | Params: id=3, hostname=server03, ip=192.168.1.12
+[2025-08-31 22:48:04.846][DEBUG] SQL: CREATE TABLE IF NOT EXISTS schema_migrations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    version TEXT NOT NULL UNIQUE,
+    applied_at TEXT NOT NULL
+) | Params: 
+[2025-08-31 22:48:04.871][DEBUG] SQL: CREATE TABLE IF NOT EXISTS __tables__ (
+    table_name TEXT PRIMARY KEY,
+    source TEXT,
+    created_at TEXT,
+    csv_hash TEXT,
+    rowcount INTEGER,
+    sample_json TEXT
+) | Params: 
+[2025-08-31 22:48:04.892][DEBUG] SQL: CREATE TABLE IF NOT EXISTS __columns__ (
+    table_name TEXT,
+    column_name TEXT,
+    data_type TEXT,
+    nullable INTEGER,
+    pk INTEGER,
+    example_values_json TEXT,
+    PRIMARY KEY (table_name, column_name)
+) | Params: 
+[2025-08-31 22:48:04.917][DEBUG] SQL: CREATE TABLE IF NOT EXISTS __fks__ (
+    table_name TEXT,
+    column_name TEXT,
+    ref_table TEXT,
+    ref_column TEXT,
+    confidence REAL,
+    status TEXT,
+    on_delete TEXT,
+    on_update TEXT,
+    PRIMARY KEY (table_name, column_name)
+); | Params: 
+[2025-08-31 22:48:04.941][DEBUG] SQL: SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' | Params: 
+[2025-08-31 22:48:04.957][DEBUG] SQL: SELECT COUNT(*) AS c FROM "assets" | Params: 
+[2025-08-31 22:48:04.991][DEBUG] SQL: INSERT INTO __tables__(table_name,source,created_at,csv_hash,rowcount,sample_json)
+VALUES(@t,@s,COALESCE((SELECT created_at FROM __tables__ WHERE table_name=@t),(datetime('now'))),@h,@c,@j)
+ON CONFLICT(table_name) DO UPDATE SET
+  source=COALESCE(excluded.source,__tables__.source),
+  csv_hash=excluded.csv_hash,
+  rowcount=excluded.rowcount | Params: s=C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\Tests\assets.csv, h=860581D0EA7C3DC744E814F1AA1090E0DDD9C0983848423C1495DC36CCBD2035, c=3, j=, t=assets
+[2025-08-31 22:48:05.022][DEBUG] SQL: PRAGMA table_info("assets") | Params: 
+[2025-08-31 22:48:05.047][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=assets, ex=, c=id, dt=INTEGER, pk=1, n=1
+[2025-08-31 22:48:05.073][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=assets, ex=, c=hostname, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:05.128][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=assets, ex=, c=ip, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:05.154][DEBUG] SQL: PRAGMA foreign_key_list("assets") | Params: 
+[2025-08-31 22:48:05.169][DEBUG] SQL: SELECT COUNT(*) AS c FROM "schema_migrations" | Params: 
+[2025-08-31 22:48:05.185][DEBUG] SQL: INSERT INTO __tables__(table_name,source,created_at,csv_hash,rowcount,sample_json)
+VALUES(@t,@s,COALESCE((SELECT created_at FROM __tables__ WHERE table_name=@t),(datetime('now'))),@h,@c,@j)
+ON CONFLICT(table_name) DO UPDATE SET
+  source=COALESCE(excluded.source,__tables__.source),
+  csv_hash=excluded.csv_hash,
+  rowcount=excluded.rowcount | Params: s=C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\Tests\assets.csv, h=, c=0, j=, t=schema_migrations
+[2025-08-31 22:48:05.208][DEBUG] SQL: PRAGMA table_info("schema_migrations") | Params: 
+[2025-08-31 22:48:05.222][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=schema_migrations, ex=, c=id, dt=INTEGER, pk=1, n=1
+[2025-08-31 22:48:05.244][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=schema_migrations, ex=, c=version, dt=TEXT, pk=0, n=0
+[2025-08-31 22:48:05.278][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=schema_migrations, ex=, c=applied_at, dt=TEXT, pk=0, n=0
+[2025-08-31 22:48:05.306][DEBUG] SQL: PRAGMA foreign_key_list("schema_migrations") | Params: 
+[2025-08-31 22:48:05.321][DEBUG] SQL: SELECT COUNT(*) AS c FROM "__tables__" | Params: 
+[2025-08-31 22:48:05.336][DEBUG] SQL: INSERT INTO __tables__(table_name,source,created_at,csv_hash,rowcount,sample_json)
+VALUES(@t,@s,COALESCE((SELECT created_at FROM __tables__ WHERE table_name=@t),(datetime('now'))),@h,@c,@j)
+ON CONFLICT(table_name) DO UPDATE SET
+  source=COALESCE(excluded.source,__tables__.source),
+  csv_hash=excluded.csv_hash,
+  rowcount=excluded.rowcount | Params: s=C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\Tests\assets.csv, h=, c=2, j=, t=__tables__
+[2025-08-31 22:48:05.360][DEBUG] SQL: PRAGMA table_info("__tables__") | Params: 
+[2025-08-31 22:48:05.376][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__tables__, ex=, c=table_name, dt=TEXT, pk=1, n=1
+[2025-08-31 22:48:05.404][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__tables__, ex=, c=source, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:05.428][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__tables__, ex=, c=created_at, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:05.453][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__tables__, ex=, c=csv_hash, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:05.478][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__tables__, ex=, c=rowcount, dt=INTEGER, pk=0, n=1
+[2025-08-31 22:48:05.503][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__tables__, ex=, c=sample_json, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:05.533][DEBUG] SQL: PRAGMA foreign_key_list("__tables__") | Params: 
+[2025-08-31 22:48:05.550][DEBUG] SQL: SELECT COUNT(*) AS c FROM "__columns__" | Params: 
+[2025-08-31 22:48:05.577][DEBUG] SQL: INSERT INTO __tables__(table_name,source,created_at,csv_hash,rowcount,sample_json)
+VALUES(@t,@s,COALESCE((SELECT created_at FROM __tables__ WHERE table_name=@t),(datetime('now'))),@h,@c,@j)
+ON CONFLICT(table_name) DO UPDATE SET
+  source=COALESCE(excluded.source,__tables__.source),
+  csv_hash=excluded.csv_hash,
+  rowcount=excluded.rowcount | Params: s=C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\Tests\assets.csv, h=, c=12, j=, t=__columns__
+[2025-08-31 22:48:05.614][DEBUG] SQL: PRAGMA table_info("__columns__") | Params: 
+[2025-08-31 22:48:05.631][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__columns__, ex=, c=table_name, dt=TEXT, pk=1, n=1
+[2025-08-31 22:48:05.656][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__columns__, ex=, c=column_name, dt=TEXT, pk=2, n=1
+[2025-08-31 22:48:05.681][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__columns__, ex=, c=data_type, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:05.706][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__columns__, ex=, c=nullable, dt=INTEGER, pk=0, n=1
+[2025-08-31 22:48:05.731][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__columns__, ex=, c=pk, dt=INTEGER, pk=0, n=1
+[2025-08-31 22:48:05.755][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__columns__, ex=, c=example_values_json, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:05.779][DEBUG] SQL: PRAGMA foreign_key_list("__columns__") | Params: 
+[2025-08-31 22:48:05.794][DEBUG] SQL: SELECT COUNT(*) AS c FROM "__fks__" | Params: 
+[2025-08-31 22:48:05.809][DEBUG] SQL: INSERT INTO __tables__(table_name,source,created_at,csv_hash,rowcount,sample_json)
+VALUES(@t,@s,COALESCE((SELECT created_at FROM __tables__ WHERE table_name=@t),(datetime('now'))),@h,@c,@j)
+ON CONFLICT(table_name) DO UPDATE SET
+  source=COALESCE(excluded.source,__tables__.source),
+  csv_hash=excluded.csv_hash,
+  rowcount=excluded.rowcount | Params: s=C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\Tests\assets.csv, h=, c=0, j=, t=__fks__
+[2025-08-31 22:48:05.834][DEBUG] SQL: PRAGMA table_info("__fks__") | Params: 
+[2025-08-31 22:48:05.851][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=table_name, dt=TEXT, pk=1, n=1
+[2025-08-31 22:48:05.878][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=column_name, dt=TEXT, pk=2, n=1
+[2025-08-31 22:48:05.902][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=ref_table, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:05.926][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=ref_column, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:05.950][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=confidence, dt=REAL, pk=0, n=1
+[2025-08-31 22:48:05.974][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=status, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:05.997][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=on_delete, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:06.022][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=on_update, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:06.045][DEBUG] SQL: PRAGMA foreign_key_list("__fks__") | Params: 
+[2025-08-31 22:48:06.069][DEBUG] SQL: CREATE TABLE IF NOT EXISTS "vulns" ("id" INTEGER PRIMARY KEY AUTOINCREMENT, "asset_id" INTEGER, "title" TEXT, "severity" TEXT) | Params: 
+[2025-08-31 22:48:06.092][DEBUG] SQL: PRAGMA table_info("vulns") | Params: 
+[2025-08-31 22:48:06.111][DEBUG] SQL: INSERT INTO "vulns" ("id", "asset_id", "title", "severity") VALUES (@id, @asset_id, @title, @severity) | Params: id=1, severity=Critical, title=SQL Injection, asset_id=1
+[2025-08-31 22:48:06.127][DEBUG] SQL: INSERT INTO "vulns" ("id", "asset_id", "title", "severity") VALUES (@id, @asset_id, @title, @severity) | Params: id=2, severity=High, title=Cross-Site Scripting, asset_id=2
+[2025-08-31 22:48:06.141][DEBUG] SQL: INSERT INTO "vulns" ("id", "asset_id", "title", "severity") VALUES (@id, @asset_id, @title, @severity) | Params: id=3, severity=Medium, title=Open Redirect, asset_id=1
+[2025-08-31 22:48:06.155][DEBUG] SQL: INSERT INTO "vulns" ("id", "asset_id", "title", "severity") VALUES (@id, @asset_id, @title, @severity) | Params: id=4, severity=Low, title=Weak Password, asset_id=3
+[2025-08-31 22:48:06.177][DEBUG] SQL: CREATE TABLE IF NOT EXISTS schema_migrations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    version TEXT NOT NULL UNIQUE,
+    applied_at TEXT NOT NULL
+) | Params: 
+[2025-08-31 22:48:06.190][DEBUG] SQL: CREATE TABLE IF NOT EXISTS __tables__ (
+    table_name TEXT PRIMARY KEY,
+    source TEXT,
+    created_at TEXT,
+    csv_hash TEXT,
+    rowcount INTEGER,
+    sample_json TEXT
+) | Params: 
+[2025-08-31 22:48:06.203][DEBUG] SQL: CREATE TABLE IF NOT EXISTS __columns__ (
+    table_name TEXT,
+    column_name TEXT,
+    data_type TEXT,
+    nullable INTEGER,
+    pk INTEGER,
+    example_values_json TEXT,
+    PRIMARY KEY (table_name, column_name)
+) | Params: 
+[2025-08-31 22:48:06.216][DEBUG] SQL: CREATE TABLE IF NOT EXISTS __fks__ (
+    table_name TEXT,
+    column_name TEXT,
+    ref_table TEXT,
+    ref_column TEXT,
+    confidence REAL,
+    status TEXT,
+    on_delete TEXT,
+    on_update TEXT,
+    PRIMARY KEY (table_name, column_name)
+); | Params: 
+[2025-08-31 22:48:06.229][DEBUG] SQL: SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' | Params: 
+[2025-08-31 22:48:06.246][DEBUG] SQL: SELECT COUNT(*) AS c FROM "assets" | Params: 
+[2025-08-31 22:48:06.260][DEBUG] SQL: INSERT INTO __tables__(table_name,source,created_at,csv_hash,rowcount,sample_json)
+VALUES(@t,@s,COALESCE((SELECT created_at FROM __tables__ WHERE table_name=@t),(datetime('now'))),@h,@c,@j)
+ON CONFLICT(table_name) DO UPDATE SET
+  source=COALESCE(excluded.source,__tables__.source),
+  csv_hash=excluded.csv_hash,
+  rowcount=excluded.rowcount | Params: s=C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\Tests\vulns.csv, h=, c=3, j=, t=assets
+[2025-08-31 22:48:06.285][DEBUG] SQL: PRAGMA table_info("assets") | Params: 
+[2025-08-31 22:48:06.303][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=assets, ex=, c=id, dt=INTEGER, pk=1, n=1
+[2025-08-31 22:48:06.317][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=assets, ex=, c=hostname, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:06.330][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=assets, ex=, c=ip, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:06.347][DEBUG] SQL: PRAGMA foreign_key_list("assets") | Params: 
+[2025-08-31 22:48:06.360][DEBUG] SQL: SELECT COUNT(*) AS c FROM "schema_migrations" | Params: 
+[2025-08-31 22:48:06.375][DEBUG] SQL: INSERT INTO __tables__(table_name,source,created_at,csv_hash,rowcount,sample_json)
+VALUES(@t,@s,COALESCE((SELECT created_at FROM __tables__ WHERE table_name=@t),(datetime('now'))),@h,@c,@j)
+ON CONFLICT(table_name) DO UPDATE SET
+  source=COALESCE(excluded.source,__tables__.source),
+  csv_hash=excluded.csv_hash,
+  rowcount=excluded.rowcount | Params: s=C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\Tests\vulns.csv, h=, c=0, j=, t=schema_migrations
+[2025-08-31 22:48:06.398][DEBUG] SQL: PRAGMA table_info("schema_migrations") | Params: 
+[2025-08-31 22:48:06.413][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=schema_migrations, ex=, c=id, dt=INTEGER, pk=1, n=1
+[2025-08-31 22:48:06.428][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=schema_migrations, ex=, c=version, dt=TEXT, pk=0, n=0
+[2025-08-31 22:48:06.443][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=schema_migrations, ex=, c=applied_at, dt=TEXT, pk=0, n=0
+[2025-08-31 22:48:06.457][DEBUG] SQL: PRAGMA foreign_key_list("schema_migrations") | Params: 
+[2025-08-31 22:48:06.471][DEBUG] SQL: SELECT COUNT(*) AS c FROM "__tables__" | Params: 
+[2025-08-31 22:48:06.487][DEBUG] SQL: INSERT INTO __tables__(table_name,source,created_at,csv_hash,rowcount,sample_json)
+VALUES(@t,@s,COALESCE((SELECT created_at FROM __tables__ WHERE table_name=@t),(datetime('now'))),@h,@c,@j)
+ON CONFLICT(table_name) DO UPDATE SET
+  source=COALESCE(excluded.source,__tables__.source),
+  csv_hash=excluded.csv_hash,
+  rowcount=excluded.rowcount | Params: s=C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\Tests\vulns.csv, h=, c=5, j=, t=__tables__
+[2025-08-31 22:48:06.515][DEBUG] SQL: PRAGMA table_info("__tables__") | Params: 
+[2025-08-31 22:48:06.538][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__tables__, ex=, c=table_name, dt=TEXT, pk=1, n=1
+[2025-08-31 22:48:06.558][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__tables__, ex=, c=source, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:06.575][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__tables__, ex=, c=created_at, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:06.589][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__tables__, ex=, c=csv_hash, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:06.601][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__tables__, ex=, c=rowcount, dt=INTEGER, pk=0, n=1
+[2025-08-31 22:48:06.614][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__tables__, ex=, c=sample_json, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:06.627][DEBUG] SQL: PRAGMA foreign_key_list("__tables__") | Params: 
+[2025-08-31 22:48:06.640][DEBUG] SQL: SELECT COUNT(*) AS c FROM "__columns__" | Params: 
+[2025-08-31 22:48:06.655][DEBUG] SQL: INSERT INTO __tables__(table_name,source,created_at,csv_hash,rowcount,sample_json)
+VALUES(@t,@s,COALESCE((SELECT created_at FROM __tables__ WHERE table_name=@t),(datetime('now'))),@h,@c,@j)
+ON CONFLICT(table_name) DO UPDATE SET
+  source=COALESCE(excluded.source,__tables__.source),
+  csv_hash=excluded.csv_hash,
+  rowcount=excluded.rowcount | Params: s=C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\Tests\vulns.csv, h=, c=26, j=, t=__columns__
+[2025-08-31 22:48:06.682][DEBUG] SQL: PRAGMA table_info("__columns__") | Params: 
+[2025-08-31 22:48:06.704][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__columns__, ex=, c=table_name, dt=TEXT, pk=1, n=1
+[2025-08-31 22:48:06.728][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__columns__, ex=, c=column_name, dt=TEXT, pk=2, n=1
+[2025-08-31 22:48:06.746][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__columns__, ex=, c=data_type, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:06.777][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__columns__, ex=, c=nullable, dt=INTEGER, pk=0, n=1
+[2025-08-31 22:48:06.792][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__columns__, ex=, c=pk, dt=INTEGER, pk=0, n=1
+[2025-08-31 22:48:06.805][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__columns__, ex=, c=example_values_json, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:06.817][DEBUG] SQL: PRAGMA foreign_key_list("__columns__") | Params: 
+[2025-08-31 22:48:06.830][DEBUG] SQL: SELECT COUNT(*) AS c FROM "__fks__" | Params: 
+[2025-08-31 22:48:06.844][DEBUG] SQL: INSERT INTO __tables__(table_name,source,created_at,csv_hash,rowcount,sample_json)
+VALUES(@t,@s,COALESCE((SELECT created_at FROM __tables__ WHERE table_name=@t),(datetime('now'))),@h,@c,@j)
+ON CONFLICT(table_name) DO UPDATE SET
+  source=COALESCE(excluded.source,__tables__.source),
+  csv_hash=excluded.csv_hash,
+  rowcount=excluded.rowcount | Params: s=C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\Tests\vulns.csv, h=, c=0, j=, t=__fks__
+[2025-08-31 22:48:06.866][DEBUG] SQL: PRAGMA table_info("__fks__") | Params: 
+[2025-08-31 22:48:06.881][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=table_name, dt=TEXT, pk=1, n=1
+[2025-08-31 22:48:06.896][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=column_name, dt=TEXT, pk=2, n=1
+[2025-08-31 22:48:06.911][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=ref_table, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:06.924][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=ref_column, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:06.938][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=confidence, dt=REAL, pk=0, n=1
+[2025-08-31 22:48:06.951][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=status, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:06.964][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=on_delete, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:06.978][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=__fks__, ex=, c=on_update, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:06.992][DEBUG] SQL: PRAGMA foreign_key_list("__fks__") | Params: 
+[2025-08-31 22:48:07.007][DEBUG] SQL: SELECT COUNT(*) AS c FROM "vulns" | Params: 
+[2025-08-31 22:48:07.022][DEBUG] SQL: INSERT INTO __tables__(table_name,source,created_at,csv_hash,rowcount,sample_json)
+VALUES(@t,@s,COALESCE((SELECT created_at FROM __tables__ WHERE table_name=@t),(datetime('now'))),@h,@c,@j)
+ON CONFLICT(table_name) DO UPDATE SET
+  source=COALESCE(excluded.source,__tables__.source),
+  csv_hash=excluded.csv_hash,
+  rowcount=excluded.rowcount | Params: s=C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\Tests\vulns.csv, h=EB14ABA7D4F57129992EAF634CEC0647BBEEB5D702E0211E138DBCA63540EE07, c=4, j=, t=vulns
+[2025-08-31 22:48:07.046][DEBUG] SQL: PRAGMA table_info("vulns") | Params: 
+[2025-08-31 22:48:07.064][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=vulns, ex=, c=id, dt=INTEGER, pk=1, n=1
+[2025-08-31 22:48:07.092][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=vulns, ex=, c=asset_id, dt=INTEGER, pk=0, n=1
+[2025-08-31 22:48:07.115][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=vulns, ex=, c=title, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:07.137][DEBUG] SQL: INSERT INTO __columns__(table_name,column_name,data_type,nullable,pk,example_values_json)
+VALUES(@t,@c,@dt,@n,@pk,@ex)
+ON CONFLICT(table_name,column_name) DO UPDATE SET data_type=excluded.data_type, nullable=excluded.nullable, pk=excluded.pk | Params: t=vulns, ex=, c=severity, dt=TEXT, pk=0, n=1
+[2025-08-31 22:48:07.160][DEBUG] SQL: PRAGMA foreign_key_list("vulns") | Params: 
+[2025-08-31 22:48:07.176][DEBUG] SQL: CREATE TABLE IF NOT EXISTS schema_migrations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    version TEXT NOT NULL UNIQUE,
+    applied_at TEXT NOT NULL
+) | Params: 
+[2025-08-31 22:48:07.189][DEBUG] SQL: CREATE TABLE IF NOT EXISTS __tables__ (
+    table_name TEXT PRIMARY KEY,
+    source TEXT,
+    created_at TEXT,
+    csv_hash TEXT,
+    rowcount INTEGER,
+    sample_json TEXT
+) | Params: 
+[2025-08-31 22:48:07.203][DEBUG] SQL: CREATE TABLE IF NOT EXISTS __columns__ (
+    table_name TEXT,
+    column_name TEXT,
+    data_type TEXT,
+    nullable INTEGER,
+    pk INTEGER,
+    example_values_json TEXT,
+    PRIMARY KEY (table_name, column_name)
+) | Params: 
+[2025-08-31 22:48:07.215][DEBUG] SQL: CREATE TABLE IF NOT EXISTS __fks__ (
+    table_name TEXT,
+    column_name TEXT,
+    ref_table TEXT,
+    ref_column TEXT,
+    confidence REAL,
+    status TEXT,
+    on_delete TEXT,
+    on_update TEXT,
+    PRIMARY KEY (table_name, column_name)
+); | Params: 
+[2025-08-31 22:48:07.229][DEBUG] SQL: SELECT table_name FROM __tables__ | Params: 
+[2025-08-31 22:48:07.251][DEBUG] SQL: SELECT column_name FROM __columns__ WHERE table_name=@t | Params: t=__columns__
+[2025-08-31 22:48:07.269][DEBUG] SQL: SELECT column_name FROM __columns__ WHERE table_name=@t | Params: t=__fks__
+[2025-08-31 22:48:07.287][DEBUG] SQL: SELECT column_name FROM __columns__ WHERE table_name=@t | Params: t=__tables__
+[2025-08-31 22:48:07.301][DEBUG] SQL: SELECT column_name FROM __columns__ WHERE table_name=@t | Params: t=assets
+[2025-08-31 22:48:07.317][DEBUG] SQL: SELECT column_name FROM __columns__ WHERE table_name=@t | Params: t=schema_migrations
+[2025-08-31 22:48:07.332][DEBUG] SQL: SELECT column_name FROM __columns__ WHERE table_name=@t | Params: t=vulns
+[2025-08-31 22:48:07.351][DEBUG] SQL: SELECT column_name FROM __columns__ WHERE table_name=@rt | Params: rt=assets
+[2025-08-31 22:48:07.384][DEBUG] SQL: INSERT INTO __fks__(table_name,column_name,ref_table,ref_column,confidence,status)
+VALUES(@t,@c,@rt,@rc,@conf,'suggested')
+ON CONFLICT(table_name,column_name)
+DO UPDATE SET
+  ref_table=excluded.ref_table,
+  ref_column=excluded.ref_column,
+  confidence=excluded.confidence,
+  status=COALESCE(__fks__.status,'suggested') | Params: conf=1, c=asset_id, rt=assets, rc=id, t=vulns
+[2025-08-31 22:48:07.478][DEBUG] SQL: CREATE TABLE a(id INTEGER PRIMARY KEY, name TEXT) | Params: 
+[2025-08-31 22:48:07.510][DEBUG] SQL: CREATE TABLE b(id INTEGER PRIMARY KEY, a_id INTEGER, val TEXT) | Params: 
+[2025-08-31 22:48:07.535][DEBUG] SQL: INSERT INTO a(id,name) VALUES (1,'a1'),(2,'a2') | Params: 
+[2025-08-31 22:48:07.561][DEBUG] SQL: INSERT INTO b(id,a_id,val) VALUES (10,1,'b1'),(11,3,'b2') | Params: 
+[2025-08-31 22:48:07.629][DEBUG] SQL: SELECT a.id as aid, b.id as bid FROM b LEFT JOIN a ON a.id = b.a_id | Params: 
+[2025-08-31 22:48:07.697][DEBUG] SQL: SELECT a.id as aid, b.id as bid FROM a LEFT JOIN b ON a.id = b.a_id UNION SELECT a.id as aid, b.id as bid FROM b LEFT JOIN a ON a.id = b.a_id | Params: 

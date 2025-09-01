@@ -45,3 +45,29 @@ Describe 'Find-DbRelationships returns suggestions' {
         ($sugs | Get-Member -Type NoteProperty | Select-Object -ExpandProperty Name) | Should -Contain 'ref_column'
     }
 }
+
+Describe 'DbQuery RIGHT/FULL join emulation' {
+    It 'Emulates RIGHT and FULL joins correctly' {
+        $tmpDir = Join-Path $PSScriptRoot 'tmp'
+        if (-not (Test-Path -LiteralPath $tmpDir)) { New-Item -ItemType Directory -Path $tmpDir | Out-Null }
+        $db = Join-Path $tmpDir ("orm_join_{0}.db" -f ([guid]::NewGuid().ToString('N')))
+
+        # Create tables and seed data
+        Invoke-DbQuery -Database $db -Query 'CREATE TABLE a(id INTEGER PRIMARY KEY, name TEXT)'
+        Invoke-DbQuery -Database $db -Query 'CREATE TABLE b(id INTEGER PRIMARY KEY, a_id INTEGER, val TEXT)'
+        Invoke-DbQuery -Database $db -Query "INSERT INTO a(id,name) VALUES (1,'a1'),(2,'a2')" -NonQuery | Out-Null
+        Invoke-DbQuery -Database $db -Query "INSERT INTO b(id,a_id,val) VALUES (10,1,'b1'),(11,3,'b2')" -NonQuery | Out-Null
+
+        # RIGHT join: expect rows from b plus matching a
+        $q = New-DbQuery -Database $db -From 'a'
+        $q = $q.Join('b', 'a.id = b.a_id', 'Right').Select(@('a.id as aid','b.id as bid'))
+        $right = $q.Run()
+        ($right | Measure-Object).Count | Should -Be 2
+
+        # FULL join: union of both sides
+        $q2 = New-DbQuery -Database $db -From 'a'
+        $q2 = $q2.Join('b', 'a.id = b.a_id', 'Full').Select(@('a.id as aid','b.id as bid'))
+        $full = $q2.Run()
+        ($full | Measure-Object).Count | Should -BeGreaterThan 2
+    }
+}

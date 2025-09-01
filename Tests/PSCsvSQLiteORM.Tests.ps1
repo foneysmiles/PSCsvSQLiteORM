@@ -10,7 +10,7 @@ Describe 'PSCsvSQLiteORM Exported Functions' {
     $functions = @(
         'Add-DbMigration',
         'Close-DbConnections',
-        'Commit-DbTransaction',
+        'Complete-DbTransaction',
         'Confirm-DbForeignKey',
         'Export-DynamicModelsFromCatalog',
         'Enable-ForeignKeysPragma',
