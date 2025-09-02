@@ -21,9 +21,9 @@ class DynamicActiveRecord {
     [void]SetAttribute([string]$key, [object]$value) { $this.Attributes[$key] = $value }
     [object]GetAttribute([string]$key) { return $this.Attributes[$key] }
 
-    [void]On([string]$Event, [scriptblock]$Action) {
-        if ($Event -notin @('BeforeSave', 'AfterSave', 'BeforeDelete', 'AfterDelete')) { throw "Invalid event '$Event'." }
-        $this.Callbacks[$Event] = $Action
+    [void]On([string]$EventName, [scriptblock]$Action) {
+        if ($EventName -notin @('BeforeSave', 'AfterSave', 'BeforeDelete', 'AfterDelete')) { throw "Invalid event '$EventName'." }
+        $this.Callbacks[$EventName] = $Action
     }
 
     [void]AddValidator([string]$Column, [string]$Type, [object]$Arg) {

@@ -15,7 +15,7 @@
 RootModule = 'PSCsvSQLiteORM.psm1'
 
 # Version number of this module.
-ModuleVersion = '3.1'
+ModuleVersion = '3.1.0'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '5.1'
@@ -101,7 +101,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @('SQLite','CSV','ORM','PowerShell','PSSQLite','ETL','Data','WindowsPowerShell')
+        Tags = @('SQLite','ORM','Database','CSV','Import','Migration')
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/joeymiles/PSCsvSQLiteORM/blob/main/LICENSE'
@@ -110,10 +110,16 @@ PrivateData = @{
         ProjectUri = 'https://github.com/joeymiles/PSCsvSQLiteORM'
 
         # A URL to an icon representing this module.
-        # IconUri = ''
+        IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'Initial PSGallery-ready metadata; SQLite CSV ORM with catalog, relationships, joins, upserts, and migrations.'
+        ReleaseNotes = @'
+v3.1.0
+- Added AppendOnly schema mode
+- RIGHT/FULL join emulation support
+- Settings script support for configuration
+- Improved error handling and logging
+'@
 
         # Prerelease string of this module
         # Prerelease = ''

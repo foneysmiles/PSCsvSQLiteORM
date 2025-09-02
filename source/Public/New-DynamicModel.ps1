@@ -1,4 +1,5 @@
 function New-DynamicModel {
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     param (
         [Parameter(Mandatory)][string]$TableName,
         [Parameter(Mandatory)][string]$Database,
@@ -7,15 +8,15 @@ function New-DynamicModel {
         [hashtable]$BelongsTo = @{}
     )
 
-    if (-not $global:DynamicClassScripts) {
-        $global:DynamicClassScripts = [System.Collections.ArrayList]::new()
-    } elseif ($global:DynamicClassScripts -isnot [System.Collections.ArrayList]) {
+    if (-not $script:DynamicClassScripts) {
+        $script:DynamicClassScripts = [System.Collections.ArrayList]::new()
+    } elseif ($script:DynamicClassScripts -isnot [System.Collections.ArrayList]) {
         # Safety: Wrap non-ArrayList (e.g., single PSCustomObject or other) into a new ArrayList
         $newList = [System.Collections.ArrayList]::new()
-        if ($global:DynamicClassScripts) {
-            [void]$newList.Add($global:DynamicClassScripts)
+        if ($script:DynamicClassScripts) {
+            [void]$newList.Add($script:DynamicClassScripts)
         }
-        $global:DynamicClassScripts = $newList
+        $script:DynamicClassScripts = $newList
     }
 
     # Ensure base class exists first
@@ -105,12 +106,18 @@ class {0} : DynamicActiveRecord {{
     if (Test-Path -LiteralPath $temp) {
         Remove-Item -LiteralPath $temp -ErrorAction SilentlyContinue
     }
-    Set-Content -LiteralPath $temp -Value $classDefinition -Encoding UTF8
+    $proceed = $true; if ($PSCmdlet) { $proceed = $PSCmdlet.ShouldProcess($temp, 'Write dynamic class file') }
+    if ($proceed) {
+        Set-Content -LiteralPath $temp -Value $classDefinition -Encoding UTF8
+    }
 
-[void]$global:DynamicClassScripts.Add([pscustomobject]@{
+    $proceed = $true; if ($PSCmdlet) { $proceed = $PSCmdlet.ShouldProcess('DynamicClassScripts', "Register $typeName") }
+    if ($proceed) {
+        [void]$script:DynamicClassScripts.Add([pscustomobject]@{
         Table     = $TableName
         ModelPath = $temp
-    })
+        })
+    }
 
     return $typeName
 }

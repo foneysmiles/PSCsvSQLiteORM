@@ -2,8 +2,8 @@
 # This file checks that all exported functions exist and can be called
 
 
-# Import the module from the output directory as PSCsvSQLiteORM
-$moduleFolder = 'C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\output\PSCsvSQLiteORM'
+# Import the module from the repo's output directory (version-agnostic)
+$moduleFolder = Join-Path (Split-Path -Parent $PSScriptRoot) 'output\PSCsvSQLiteORM'
 Import-Module $moduleFolder -Force
 
 Describe 'PSCsvSQLiteORM Exported Functions' {

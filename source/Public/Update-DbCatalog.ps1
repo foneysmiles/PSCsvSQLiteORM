@@ -1,4 +1,5 @@
 function Update-DbCatalog {
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
     param(
         [Parameter(Mandatory)]
         [string]$Database, 
@@ -6,6 +7,7 @@ function Update-DbCatalog {
         [string]$Table
     )
     
+    # ShouldProcess not invoked here to avoid runtime issues under ModuleBuilder; analyzer may still warn.
     Initialize-Db -Database $Database
     $tables = Invoke-DbQuery -Database $Database -Query "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
     

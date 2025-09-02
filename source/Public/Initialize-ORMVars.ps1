@@ -36,7 +36,7 @@ Function Initialize-ORMVars {
     $script:PragmaSet = @{}
     $script:ModelTypes = @{}
     $script:ModelTypeObjects = @{}
-    $global:DynamicClassScripts = [System.Collections.ArrayList]::new()
+    $script:DynamicClassScripts = [System.Collections.ArrayList]::new()
 
     # Optionally load settings from a script returning a hashtable
     $cfg = $null
@@ -56,8 +56,13 @@ Function Initialize-ORMVars {
     if ($DbPath) { $script:DbDefaultPath = $DbPath }
 
     # Summarize configuration for users at INFO level
-    try { Write-DbLog INFO ("ORM initialized. Level={0}, LogPath={1}, DefaultDb={2}" -f $script:DbLogLevel, ($script:DbLogPath ?? '(none)'), ($script:DbDefaultPath ?? '(none)')) } catch { }
+    try { Write-DbLog -Level INFO -Message ("ORM initialized. Level={0}, LogPath={1}, DefaultDb={2}" -f $script:DbLogLevel, ($script:DbLogPath ?? '(none)'), ($script:DbDefaultPath ?? '(none)')) } catch { Write-Verbose "Initialize-ORMVars summary log failed: $($_.Exception.Message)" }
 }
 
 # Initialize defaults automatically on module import (no settings file here)
-Initialize-ORMVars | Out-Null
+try {
+    Initialize-ORMVars | Out-Null
+}
+catch {
+    Write-Warning ("Failed to initialize ORM variables: {0}" -f $_)
+}

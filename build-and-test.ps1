@@ -13,8 +13,26 @@ if (-not (Test-Path $OutputPath)) {
 }
 
 # Build the module
-Import-Module ModuleBuilder
-Build-Module -SourcePath .\source -OutputDirectory 'C:\Users\Jaga\Documents\Scripts\PSCsvSqliteORM\PSCsvSQLiteORM\output' -Verbose -Version 3.01
+Import-Module ModuleBuilder -ErrorAction Stop
+
+# Derive version from source manifest to keep things consistent
+$manifestInfo = Test-ModuleManifest -Path $ManifestPath
+$version = $manifestInfo.Version.ToString()
+Write-Host "Building $ModuleName version $version to $OutputPath"
+
+Build-Module -SourcePath $SourcePath -OutputDirectory $OutputPath -Verbose -Version $version
+
+# Copy ancillary docs/examples into the built module folder
+$builtBase = Join-Path $OutputPath $ModuleName
+$builtVersionPath = Join-Path $builtBase $version
+$docsSrc = Join-Path $PSScriptRoot 'docs'
+if (Test-Path $docsSrc) {
+    Copy-Item -Recurse -Force $docsSrc (Join-Path $builtVersionPath 'docs')
+}
+$examplesSrc = Join-Path $SourcePath 'Examples'
+if (Test-Path $examplesSrc) {
+    Copy-Item -Recurse -Force $examplesSrc (Join-Path $builtVersionPath 'Examples')
+}
 
 # Import the built module for testing
 $BuiltModulePath = Join-Path $OutputPath $ModuleName
