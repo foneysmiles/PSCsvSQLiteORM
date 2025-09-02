@@ -18,7 +18,7 @@ RootModule = 'PSCsvSQLiteORM.psm1'
 ModuleVersion = '1.0.1'
 
 # Supported PSEditions
-CompatiblePSEditions = @('Desktop')
+CompatiblePSEditions = @('5.1')
 
 # ID used to uniquely identify this module
 GUID = '6109e160-fe6f-4fc3-87be-bb71db65bfd7'
@@ -36,7 +36,7 @@ Copyright = '(c) Joey A Miles. All rights reserved.'
 Description = 'A SQLite ORM for Windows PowerShell 5.1 with catalog, relationships, joins, upserts, and migrations.'
 
 # Minimum version of the PowerShell engine required by this module
-PowerShellVersion = '5.1'
+# PowerShellVersion = ''
 
 # Name of the PowerShell host required by this module
 # PowerShellHostName = ''
@@ -102,10 +102,10 @@ FunctionsToExport = @(
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-CmdletsToExport = @()
+CmdletsToExport = '*'
 
 # Variables to export from this module
-VariablesToExport = @()
+VariablesToExport = '*'
 
 # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
 AliasesToExport = @()
@@ -125,28 +125,28 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @('SQLite','CSV','ORM','PSSQLite','ActiveRecord','PowerShell','Windows')
+        # Tags = @()
 
         # A URL to the license for this module.
-        # LicenseUri = 'https://github.com/<owner>/PSCsvSQLiteORM/blob/main/LICENSE'
+        # LicenseUri = ''
 
         # A URL to the main website for this project.
-        # ProjectUri = 'https://github.com/<owner>/PSCsvSQLiteORM'
+        # ProjectUri = ''
 
         # A URL to an icon representing this module.
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'Initial release with CSV import, schema inference, joins (RIGHT/FULL emulated), dynamic models, and migrations.'
+        # ReleaseNotes = ''
 
         # Prerelease string of this module
         # Prerelease = ''
 
         # Flag to indicate whether the module requires explicit user acceptance for install/update/save
-        RequireLicenseAcceptance = $false
+        # RequireLicenseAcceptance = $false
 
         # External dependent modules of this module
-        ExternalModuleDependencies = @('PSSQLite')
+        # ExternalModuleDependencies = @()
 
     } # End of PSData hashtable
 
