@@ -5,11 +5,13 @@ PowerShell 5.1 ORM for SQLite with CSV import, schema inference, dynamic models,
 ## Quick Start
 
 - Install dependency: `Install-Module PSSQLite -Scope CurrentUser`
-- Build/import module: `./build-and-test.ps1` or `Import-Module .\output\PSCsvSQLiteORM`
+
 - Initialize logging and defaults:
   - `Initialize-ORMVars -LogLevel DEBUG -LogPath 'C:\\path\\db.log'`
+
 - Import CSVs:
   - `Import-CsvToSqlite -CsvPath .\Tests\assets.csv -Database .\sample.db -TableName assets`
+
 - Update catalog and generate models:
   - `$types = Export-DynamicModelsFromCatalog -Database .\sample.db`
   - `Set-DynamicORMClass`
@@ -38,7 +40,7 @@ Explicit parameters override settings in the file.
 ## AppendOnly schema mode
 
 - `Import-CsvToSqlite -SchemaMode AppendOnly` prohibits schema changes and skips table creation.
-- If the table does not exist, the command throws.
+- If the table does not exist, the command throws and exits.
 
 ## RIGHT/FULL join emulation
 
