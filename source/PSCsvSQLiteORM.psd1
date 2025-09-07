@@ -15,7 +15,7 @@
 RootModule = 'PSCsvSQLiteORM.psm1'
 
 # Version number of this module.
-ModuleVersion = '3.1.1'
+ModuleVersion = '3.1.3'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '5.1'
@@ -141,6 +141,16 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
+v3.1.3
+- Fixed SQL parameter binding errors when column names contain spaces or special characters
+- Sanitize parameter names to use only alphanumeric characters and underscores
+- Improved compatibility with CSV files that have complex column naming
+
+v3.1.2
+- Fixed SQLite version compatibility by replacing ON CONFLICT (UPSERT) syntax with traditional INSERT/UPDATE
+- Supports older SQLite versions (< 3.24.0) that don't have UPSERT support
+- Fixed catalog update functions for broader SQLite compatibility
+
 v3.1.1
 - Fixed PowerShell 5.1 compatibility by replacing null-coalescing operator (??) with conditional statements
 - Resolved module import errors on Windows PowerShell 5.1

@@ -9,8 +9,11 @@ PowerShell 5.1 ORM for SQLite with CSV import, schema inference, dynamic models,
 # Install required PSSQLite module
 Install-Module PSSQLite -Scope CurrentUser
 
-# Install PSCsvSQLiteORM from PowerShell Gallery
+# Install PSCsvSQLiteORM from PowerShell Gallery (latest version)
 Install-Module PSCsvSQLiteORM -Scope CurrentUser
+
+# Or install specific version 3.1.3
+Install-Module PSCsvSQLiteORM -RequiredVersion 3.1.3 -Scope CurrentUser
 ```
 
 ### 2. Initialize the ORM

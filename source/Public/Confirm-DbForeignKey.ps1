@@ -46,10 +46,23 @@ END;
         Invoke-DbQuery -Database $Database -Query $cascadeSql -NonQuery | Out-Null
     }
 
-    # Record as confirmed
-    Invoke-DbQuery -Database $Database -Query @"
+    # Record as confirmed (compatible with older SQLite)
+    $existingFk = Invoke-DbQuery -Database $Database -Query "SELECT column_name FROM __fks__ WHERE table_name=@t AND column_name=@c" -SqlParameters @{ t = $From; c = $Column }
+    if ($existingFk) {
+        # Update existing FK record
+        Invoke-DbQuery -Database $Database -Query @"
+UPDATE __fks__ SET 
+  ref_table=@rt,
+  ref_column=@rc,
+  status='confirmed',
+  on_delete=@od
+WHERE table_name=@t AND column_name=@c
+"@ -SqlParameters @{ t = $From; c = $Column; rt = $To; rc = $RefColumn; od = $OnDelete } -NonQuery | Out-Null
+    } else {
+        # Insert new FK record
+        Invoke-DbQuery -Database $Database -Query @"
 INSERT INTO __fks__(table_name,column_name,ref_table,ref_column,confidence,status,on_delete)
 VALUES(@t,@c,@rt,@rc,1.0,'confirmed',@od)
-ON CONFLICT(table_name,column_name) DO UPDATE SET ref_table=excluded.ref_table, ref_column=excluded.ref_column, status='confirmed', on_delete=@od
 "@ -SqlParameters @{ t = $From; c = $Column; rt = $To; rc = $RefColumn; od = $OnDelete } -NonQuery | Out-Null
+    }
 }

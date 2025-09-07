@@ -62,16 +62,26 @@ function Find-DbRelationships {
                     $refCols = (Invoke-DbQuery -Database $Database -Query "SELECT column_name FROM __columns__ WHERE table_name=@rt" -SqlParameters @{ rt = $ref } | ForEach-Object { $_.column_name })
                     $pick = Get-RefColumn -Base $base -RefTable $ref -RefCols $refCols
 
-                    Invoke-DbQuery -Database $Database -Query @"
+                    # Check if FK suggestion exists (compatible with older SQLite)
+                    $existingFk = Invoke-DbQuery -Database $Database -Query "SELECT status FROM __fks__ WHERE table_name=@t AND column_name=@c" -SqlParameters @{ t = $tn; c = $c }
+                    if ($existingFk) {
+                        # Update existing FK suggestion
+                        $currentStatus = $existingFk[0].status
+                        Invoke-DbQuery -Database $Database -Query @"
+UPDATE __fks__ SET 
+  ref_table=@rt,
+  ref_column=@rc,
+  confidence=@conf,
+  status=COALESCE(@curstat,'suggested')
+WHERE table_name=@t AND column_name=@c
+"@ -SqlParameters @{ t = $tn; c = $c; rt = $ref; rc = $pick.name; conf = [math]::Round($pick.score, 2); curstat = $currentStatus } -NonQuery | Out-Null
+                    } else {
+                        # Insert new FK suggestion
+                        Invoke-DbQuery -Database $Database -Query @"
 INSERT INTO __fks__(table_name,column_name,ref_table,ref_column,confidence,status)
 VALUES(@t,@c,@rt,@rc,@conf,'suggested')
-ON CONFLICT(table_name,column_name)
-DO UPDATE SET
-  ref_table=excluded.ref_table,
-  ref_column=excluded.ref_column,
-  confidence=excluded.confidence,
-  status=COALESCE(__fks__.status,'suggested')
 "@ -SqlParameters @{ t = $tn; c = $c; rt = $ref; rc = $pick.name; conf = [math]::Round($pick.score, 2) } -NonQuery | Out-Null
+                    }
 
                     [void]$suggestions.Add([pscustomobject]@{
                         table_name  = $tn

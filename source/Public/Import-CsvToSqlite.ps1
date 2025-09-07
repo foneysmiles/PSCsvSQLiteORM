@@ -36,6 +36,7 @@ function Import-CsvToSqlite {
     if ($SchemaMode -ne 'AppendOnly') {
         if (-not [string]::IsNullOrWhiteSpace($quotedCols)) {
             $createQuery = "CREATE TABLE IF NOT EXISTS $(ConvertTo-Ident $TableName) ($quotedCols)"
+            Write-DbLog DEBUG "Creating table with query: $createQuery"
             Invoke-DbQuery -Database $Database -Query $createQuery -NonQuery | Out-Null
         }
     } else {
@@ -69,10 +70,19 @@ function Import-CsvToSqlite {
         foreach ($row in $csv) {
             $keys = $row.PSObject.Properties.Name
             $columns = (($keys | ForEach-Object { ConvertTo-Ident $_ })) -join ", "
-            $placeholders = (($keys | ForEach-Object { "@$_" })) -join ", "
+            # Sanitize parameter names by replacing spaces and special chars with underscores
+            $paramNames = @{}
+            $placeholders = (($keys | ForEach-Object { 
+                $paramName = $_ -replace '[^a-zA-Z0-9_]', '_'
+                $paramNames[$_] = $paramName
+                "@$paramName" 
+            })) -join ", "
             $query = "INSERT INTO $(ConvertTo-Ident $TableName) ($columns) VALUES ($placeholders)"
             $params = @{}
-            foreach ($k in $keys) { $params[$k] = $row.$k }
+            foreach ($k in $keys) { 
+                $paramName = $paramNames[$k]
+                $params[$paramName] = $row.$k 
+            }
             [void](Invoke-DbQuery -Database $Database -Query $query -SqlParameters $params -NonQuery -Transaction $tx)
             $count++
             if ($BatchSize -gt 0 -and ($count % $BatchSize) -eq 0) {

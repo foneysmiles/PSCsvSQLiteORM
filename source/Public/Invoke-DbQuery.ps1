@@ -54,6 +54,9 @@ function Invoke-DbQuery {
                 return Invoke-SqliteQuery -DataSource $Database -Query $Query -SqlParameters $SqlParameters
             }
         }
-        catch { Write-DbLog ERROR "Invoke-DbQuery (PSSQLite) error" $_.Exception; throw }
+        catch { 
+            Write-DbLog ERROR "Invoke-DbQuery (PSSQLite) error: Query='$Query'" $_.Exception
+            throw 
+        }
     }
 }
