@@ -56,7 +56,13 @@ Function Initialize-ORMVars {
     if ($DbPath) { $script:DbDefaultPath = $DbPath }
 
     # Summarize configuration for users at INFO level
-    try { Write-DbLog -Level INFO -Message ("ORM initialized. Level={0}, LogPath={1}, DefaultDb={2}" -f $script:DbLogLevel, ($script:DbLogPath ?? '(none)'), ($script:DbDefaultPath ?? '(none)')) } catch { Write-Verbose "Initialize-ORMVars summary log failed: $($_.Exception.Message)" }
+    try { 
+        $logPathDisplay = if ($script:DbLogPath) { $script:DbLogPath } else { '(none)' }
+        $dbPathDisplay = if ($script:DbDefaultPath) { $script:DbDefaultPath } else { '(none)' }
+        Write-DbLog -Level INFO -Message ("ORM initialized. Level={0}, LogPath={1}, DefaultDb={2}" -f $script:DbLogLevel, $logPathDisplay, $dbPathDisplay) 
+    } catch { 
+        Write-Verbose "Initialize-ORMVars summary log failed: $($_.Exception.Message)" 
+    }
 }
 
 # Initialize defaults automatically on module import (no settings file here)

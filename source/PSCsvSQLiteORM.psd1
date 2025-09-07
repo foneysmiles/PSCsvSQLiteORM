@@ -15,7 +15,7 @@
 RootModule = 'PSCsvSQLiteORM.psm1'
 
 # Version number of this module.
-ModuleVersion = '3.1.0'
+ModuleVersion = '3.1.1'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '5.1'
@@ -141,6 +141,10 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
+v3.1.1
+- Fixed PowerShell 5.1 compatibility by replacing null-coalescing operator (??) with conditional statements
+- Resolved module import errors on Windows PowerShell 5.1
+
 v3.1.0
 - Added AppendOnly schema mode
 - RIGHT/FULL join emulation support

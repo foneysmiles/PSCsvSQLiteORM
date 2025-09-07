@@ -1,0 +1,34 @@
+# Build output
+output/
+
+# Build and publish scripts
+build-and-test.ps1
+publish.ps1
+
+# AI assistance files
+CLAUDE.md
+
+# Test artifacts
+Tests/tmp/
+*.db
+*.log
+
+# PowerShell module cache
+*.psd1.bak
+*.psm1.bak
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# NuGet packages
+*.nupkg
+*.nuspec
