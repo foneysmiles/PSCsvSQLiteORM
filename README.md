@@ -74,19 +74,3 @@ $asset.Save()
 # Delete a record
 $asset.Delete()
 ```
-
-## RIGHT/FULL join emulation
-
-The query builder supports INNER and LEFT joins natively. RIGHT and FULL joins are emulated:
-- RIGHT JOIN: internally swapped into LEFT JOIN
-- FULL OUTER JOIN: emulated via `LEFT JOIN A->B UNION LEFT JOIN B->A`
-
-Limitations: currently supports at most one RIGHT/FULL join per query.
-
-Example:
-
-```
-$q = New-DbQuery -Database $db -From 'a'
-$q = $q.Join('b', 'a.id = b.a_id', 'Right').Select(@('a.id as aid','b.id as bid'))
-$rows = $q.Run()
-```
